@@ -25,9 +25,9 @@ func (w *wrapper) Get(x []float64) float64 {
 	n := w.n
 	stride := n + 1
 	cache := w.cache
-	cache_len := len(cache)
+	cacheLen := len(cache)
 search:
-	for base := 0; base+n < cache_len; base += stride {
+	for base := 0; base+n < cacheLen; base += stride {
 		for i := 0; i < n; i++ {
 			if cache[base+i] != x[i] {
 				continue search
@@ -53,7 +53,11 @@ func (w *wrapper) Less(x, y []float64) bool {
 	return w.Get(x) < w.Get(y)
 }
 
-// Function minimizes a real-valued function.
+// Function finds an (approximate) local minimum of `fn` near `x0`.
+// The parameter `ε` gives the size of the initial simplex.
+//
+// This is a wrapper around `Minimize()`, with caching of returned
+// function values to avoid unnecessary calls to `f`.
 func Function(f func([]float64) float64, x0 []float64, ε float64) []float64 {
 	return Minimize(&wrapper{f: f}, x0, ε)
 }

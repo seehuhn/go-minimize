@@ -20,6 +20,19 @@ import (
 	"sort"
 )
 
+// Interface is a type, typically a wrapped function, which can be
+// minimized by the Minimize routine in this package.  Functions
+// described by Interface take a slice of float64 values as their
+// argument.
+//
+// This interface can be used for multi-valued or non-numerical
+// functions.
+type Interface interface {
+	// Less reports wether the value at `x` is strictly smaller than
+	// the value at `y`.
+	Less(x, y []float64) bool
+}
+
 // The following parameters refer to the description of the method in
 // Jeffrey C. Lagarias, James A. Reeds, Margaret H. Wright, and Paul
 // E. Wright: Convergence Properties of the Nelder-Mead Simplex Method
@@ -31,16 +44,6 @@ const (
 	γ = 0.5 // contraction parameter
 	σ = 0.5 // shrinkage parameter
 )
-
-// Interface is a type, typically a wrapped function, which can be
-// minimized by the Minimize function in this package.  Functions
-// described by Interface take a slice of float64 values as their
-// argument.
-type Interface interface {
-	// Less reports wether the value at `x` is smaller than the value
-	// at `y`.
-	Less(x, y []float64) bool
-}
 
 type state struct {
 	Fn Interface
@@ -145,9 +148,10 @@ func (s *state) Shrink() {
 	}
 }
 
-// Minimize finds an (approximate) local minimum of `fn` near `x`.
-func Minimize(fn Interface, x []float64, ε float64) []float64 {
-	n := len(x)
+// Minimize finds an (approximate) local minimum of `fn` near `x0`.
+// The parameter `ε` gives the size of the initial simplex.
+func Minimize(fn Interface, x0 []float64, ε float64) []float64 {
+	n := len(x0)
 
 	// Allocate an array for the n+1 vertices of the simplex, together
 	// with three scratch vertices.
@@ -156,7 +160,7 @@ func Minimize(fn Interface, x []float64, ε float64) []float64 {
 		N:  n,
 		X:  make([]float64, (n+4)*n),
 	}
-	s.Init(x, ε)
+	s.Init(x0, ε)
 
 	shrinkCount := 0
 	for step := 0; step < 10000; step++ {

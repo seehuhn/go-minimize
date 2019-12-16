@@ -14,5 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-// Package minimize implements the Nelder–Mead simplex algorithm.
+// Package minimize implements the Nelder–Mead simplex algorithm for
+// minimization.
+//
+// The specific variant of the algorithm is the one described in
+// Jeffrey C. Lagarias, James A. Reeds, Margaret H. Wright, and Paul
+// E. Wright: Convergence Properties of the Nelder-Mead Simplex Method
+// In Low Dimensions.  SIAM J. Optim, Vol. 9 (1998), No. 1,
+// pp. 112-147.  https://doi.org/10.1137/S1052623496303470
 package minimize
