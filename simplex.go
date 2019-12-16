@@ -203,14 +203,3 @@ func Minimize(fn Interface, x []float64, ε float64) []float64 {
 	copy(res, s.Point(0))
 	return res
 }
-
-type wrapper func([]float64) float64
-
-func (w wrapper) Less(x, y []float64) bool {
-	return w(x) < w(y)
-}
-
-// Function minimizes a real-valued function.
-func Function(f func([]float64) float64, x0 []float64, ε float64) []float64 {
-	return Minimize(wrapper(f), x0, ε)
-}

@@ -41,25 +41,44 @@ func Himmelblau(x []float64) float64 {
 	return p*p + q*q
 }
 
+func Zero(c []float64) float64 {
+	return 0
+}
+
 func TestMinimize(t *testing.T) {
+	targets := []struct {
+		name string
+		f    func([]float64) float64
+	}{
+		{"Quadratic", Quadratic},
+		{"Rosenbrock", Rosenbrock},
+		{"Himmelblau", Himmelblau},
+		{"Zero", Zero},
+	}
 	for _, x := range []float64{-100, -2.1, -2, -1, 0, 1, 2, 50, 200} {
 		for _, y := range []float64{-200, -2, -1, 0, 1, 2, 5, 100} {
 			x0 := []float64{x, y}
 
-			min := Function(Quadratic, x0, 0.1)
-			if Quadratic(min) >= 1e-6 {
-				t.Error("Quadratic:", min, "->", Quadratic(min))
-			}
-
-			min = Function(Rosenbrock, x0, 0.1)
-			if Rosenbrock(min) >= 1e-6 {
-				t.Error("Rosenbrock:", min, "->", Rosenbrock(min))
-			}
-
-			min = Function(Himmelblau, x0, 0.1)
-			if Himmelblau(min) >= 1e-6 {
-				t.Error("Himmelblau:", min, "->", Himmelblau(min))
+			for _, target := range targets {
+				min := Function(target.f, x0, 0.1)
+				if target.f(min) >= 1e-6 {
+					t.Error(target.name+":", min, "->", target.f(min))
+				}
 			}
 		}
+	}
+}
+
+func BenchmarkZero(b *testing.B) {
+	x0 := []float64{1, 2, 3, 4, 5, 6}
+	for i := 0; i < b.N; i++ {
+		_ = Function(Zero, x0, 1.0)
+	}
+}
+
+func BenchmarkQuadratic(b *testing.B) {
+	x0 := []float64{1, 2, 3, 4, 5, 6}
+	for i := 0; i < b.N; i++ {
+		_ = Function(Quadratic, x0, 1.0)
 	}
 }
