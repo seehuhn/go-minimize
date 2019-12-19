@@ -150,7 +150,7 @@ func Minimize(less func(x, y []float64) bool, x0 []float64, ε float64) []float6
 	s.Init(x0, ε)
 
 	shrinkCount := 0
-	for step := 0; step < 10000; step++ {
+	for step := 0; step < 100000; step++ {
 		s.Centroid() // stored in p_{n+1}
 
 		s.Shift(n+2, n+1, n, -ρ) // reflect
@@ -185,7 +185,7 @@ func Minimize(less func(x, y []float64) bool, x0 []float64, ε float64) []float6
 		sort.Sort(s)
 		shrinkCount++
 
-		if shrinkCount > 10 {
+		if shrinkCount > 100 {
 			break
 		}
 	}
