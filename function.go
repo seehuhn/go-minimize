@@ -49,15 +49,14 @@ search:
 	return res
 }
 
-func (w *wrapper) Less(x, y []float64) bool {
-	return w.Get(x) < w.Get(y)
-}
-
 // Function finds an (approximate) local minimum of `fn` near `x0`.
 // The parameter `ε` gives the size of the initial simplex.
 //
 // This is a wrapper around `Minimize()`, with caching of returned
 // function values to avoid unnecessary calls to `f`.
 func Function(f func([]float64) float64, x0 []float64, ε float64) []float64 {
-	return Minimize(&wrapper{f: f}, x0, ε)
+	w := &wrapper{f: f}
+	return Minimize(func(x, y []float64) bool {
+		return w.Get(x) < w.Get(y)
+	}, x0, ε)
 }
