@@ -17,6 +17,7 @@
 package minimize
 
 import (
+	"math"
 	"testing"
 )
 
@@ -65,6 +66,16 @@ func TestMinimize(t *testing.T) {
 					t.Error(target.name+":", min, "->", target.f(min))
 				}
 			}
+		}
+	}
+}
+
+func TestQuadratic(t *testing.T) {
+	x0 := []float64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
+	min := Function(Quadratic, x0, 0.1)
+	for i, xi := range min {
+		if math.Abs(xi) >= 1e-6 {
+			t.Errorf("wrong result for x_%d: expected 0, got %f", i, xi)
 		}
 	}
 }
