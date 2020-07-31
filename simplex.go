@@ -135,8 +135,8 @@ func (s *state) Shrink() {
 	}
 }
 
-// Minimize finds an (approximate) local minimum of `fn` near `x0`.
-// The parameter `ε` gives the size of the initial simplex.
+// Minimize finds an (approximate) local minimum near `x0`.  The parameter `ε`
+// gives the size of the initial simplex.
 func Minimize(less func(x, y []float64) bool, x0 []float64, ε float64) []float64 {
 	n := len(x0)
 
